@@ -97,9 +97,9 @@ public final class ReservationService {
         reservation.setFulfilled(true);
         reservationDao.update(reservation);
 
-        LocalDate dueDate = LocalDate.now().plusDays(21);
+        LocalDate today = LocalDate.now();
         Loan loan = new Loan(reservation.getMember(), reservation.getBook(),
-                LocalDate.now(), dueDate);
+                today, LoanPolicy.dueDate(today));
         loanDao.create(loan);
         return loan;
     }
