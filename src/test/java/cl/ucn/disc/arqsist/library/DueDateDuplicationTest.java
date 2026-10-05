@@ -55,7 +55,7 @@ class DueDateDuplicationTest {
         memberService = new MemberService(memberDao, bookDao, loanDao);
         reservationService = new ReservationService(reservationDao, bookDao, memberDao, loanDao);
 
-        book = new Book("Design Patterns", "Gamma et al.", "9780201633610", 1);
+        book = new Book("Design Patterns", "Gamma et al.", "9780201633610", 2);
         bookDao.create(book);
         member = new Member("Grace Hopper", "grace@example.com");
         memberDao.create(member);
@@ -74,6 +74,6 @@ class DueDateDuplicationTest {
         Loan fromFulfill = reservationService.fulfill(reservation.getId());
 
         assertEquals(fromCheckout.getDueDate(), fromFulfill.getDueDate(),
-                "the same kind of loan should have the same due date");
+                "checkout and fulfill must use the same loan period from LoanPolicy");
     }
 }
