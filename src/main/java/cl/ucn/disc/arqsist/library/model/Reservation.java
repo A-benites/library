@@ -3,8 +3,11 @@
  */
 package cl.ucn.disc.arqsist.library.model;
 
+import cl.ucn.disc.arqsist.library.db.LocalDatePersister;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import java.time.LocalDate;
 
 /**
  * Represents a reservation made by a {@link Member} for a {@link Book}.
@@ -28,8 +31,8 @@ public final class Reservation {
     private Book book;
 
     /** The date the reservation was created. */
-    @DatabaseField(canBeNull = false)
-    private String reservedAt;
+    @DatabaseField(canBeNull = false, persisterClass = LocalDatePersister.class)
+    private LocalDate reservedAt;
 
     /** Whether the reservation has been fulfilled into a loan. */
     @DatabaseField
@@ -46,7 +49,7 @@ public final class Reservation {
      * @param book       the book being reserved
      * @param reservedAt the date the reservation is created
      */
-    public Reservation(Member member, Book book, String reservedAt) {
+    public Reservation(Member member, Book book, LocalDate reservedAt) {
         this.member = member;
         this.book = book;
         this.reservedAt = reservedAt;
@@ -110,18 +113,18 @@ public final class Reservation {
     /**
      * Returns the date the reservation was created.
      *
-     * @return the reservation date string
+     * @return the reservation date
      */
-    public String getReservedAt() {
+    public LocalDate getReservedAt() {
         return reservedAt;
     }
 
     /**
      * Sets the reservation date.
      *
-     * @param reservedAt the reservation date string
+     * @param reservedAt the reservation date
      */
-    public void setReservedAt(String reservedAt) {
+    public void setReservedAt(LocalDate reservedAt) {
         this.reservedAt = reservedAt;
     }
 

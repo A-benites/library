@@ -3,6 +3,7 @@
  */
 package cl.ucn.disc.arqsist.library.model;
 
+import cl.ucn.disc.arqsist.library.db.LocalDatePersister;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -30,16 +31,16 @@ public final class Loan {
     private Book book;
 
     /** The date on which the loan was created. */
-    @DatabaseField(canBeNull = false)
-    private String loanDate;
+    @DatabaseField(canBeNull = false, persisterClass = LocalDatePersister.class)
+    private LocalDate loanDate;
 
     /** The date by which the book must be returned. */
-    @DatabaseField(canBeNull = false)
-    private String dueDate;
+    @DatabaseField(canBeNull = false, persisterClass = LocalDatePersister.class)
+    private LocalDate dueDate;
 
     /** The date on which the book was actually returned; {@code null} if still on loan. */
-    @DatabaseField
-    private String returnDate;
+    @DatabaseField(persisterClass = LocalDatePersister.class)
+    private LocalDate returnDate;
 
     /** Whether the book has been returned. */
     @DatabaseField
@@ -61,7 +62,7 @@ public final class Loan {
      * @param loanDate the date the loan is created
      * @param dueDate  the date by which the book must be returned
      */
-    public Loan(Member member, Book book, String loanDate, String dueDate) {
+    public Loan(Member member, Book book, LocalDate loanDate, LocalDate dueDate) {
         this.member = member;
         this.book = book;
         this.loanDate = loanDate;
@@ -125,56 +126,56 @@ public final class Loan {
     }
 
     /**
-     * Returns the loan date as a string.
+     * Returns the loan date.
      *
      * @return the loan date
      */
-    public String getLoanDate() {
+    public LocalDate getLoanDate() {
         return loanDate;
     }
 
     /**
      * Sets the loan date.
      *
-     * @param loanDate the loan date string
+     * @param loanDate the loan date
      */
-    public void setLoanDate(String loanDate) {
+    public void setLoanDate(LocalDate loanDate) {
         this.loanDate = loanDate;
     }
 
     /**
-     * Returns the due date as a string.
+     * Returns the due date.
      *
      * @return the due date
      */
-    public String getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
     /**
      * Sets the due date.
      *
-     * @param dueDate the due date string
+     * @param dueDate the due date
      */
-    public void setDueDate(String dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
     /**
-     * Returns the return date as a string, or {@code null} if not yet returned.
+     * Returns the return date, or {@code null} if not yet returned.
      *
      * @return the return date, or {@code null}
      */
-    public String getReturnDate() {
+    public LocalDate getReturnDate() {
         return returnDate;
     }
 
     /**
      * Sets the return date.
      *
-     * @param returnDate the return date string
+     * @param returnDate the return date
      */
-    public void setReturnDate(String returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
 
@@ -185,15 +186,6 @@ public final class Loan {
      */
     public boolean isReturned() {
         return returned;
-    }
-
-    /**
-     * Returns {@code true} if the loan is overdue (not returned and past due date).
-     *
-     * @return {@code true} if overdue
-     */
-    public boolean isOverdue() {
-        return !returned && LocalDate.parse(dueDate).isBefore(LocalDate.now());
     }
 
     /**
