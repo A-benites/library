@@ -35,7 +35,7 @@ public final class BookService {
      * @return a list of all books; never {@code null}
      * @throws SQLException if the query fails
      */
-    public List<Book> listAll() throws SQLException {
+    public List<Book> listAll() {
         return dao.findAll();
     }
 
@@ -46,7 +46,7 @@ public final class BookService {
      * @return the {@link Book}, or {@code null} if not found
      * @throws SQLException if the query fails
      */
-    public Book findById(int id) throws SQLException {
+    public Book findById(int id) {
         return dao.findById(id);
     }
 
@@ -59,7 +59,7 @@ public final class BookService {
      * @return the persisted book with its generated ID
      * @throws SQLException if the insert fails
      */
-    public Book create(Book book) throws SQLException {
+    public Book create(Book book) {
         book.setAvailableCopies(book.getTotalCopies());
         dao.create(book);
         return book;
@@ -71,8 +71,14 @@ public final class BookService {
      * @param bookId the ID of the book being borrowed
      * @throws SQLException if the update fails
      */
-    public void borrow(int bookId) throws SQLException {
+    public void borrow(int bookId) {
         Book book = dao.findById(bookId);
+        if (book == null) {
+            throw new NotFoundException("Book not found: " + bookId);
+        }
+        if (book.getAvailableCopies() <= 0) {
+            throw new IllegalStateException("No available copies of book " + bookId);
+        }
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         dao.update(book);
     }
@@ -83,8 +89,11 @@ public final class BookService {
      * @param bookId the ID of the book being returned
      * @throws SQLException if the update fails
      */
-    public void returnCopy(int bookId) throws SQLException {
+    public void returnCopy(int bookId) {
         Book book = dao.findById(bookId);
+        if (book == null) {
+            throw new NotFoundException("Book not found: " + bookId);
+        }
         book.setAvailableCopies(book.getAvailableCopies() + 1);
         dao.update(book);
     }
