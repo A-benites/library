@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2026. Arquitectura de Sistemas, DISC, UCN, Antofagasta.
+ */
 package cl.ucn.disc.arqsist.library;
 
 import cl.ucn.disc.arqsist.library.dao.BookDao;
@@ -16,13 +19,31 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Verifies that {@code checkout} and {@code fulfill} use the same loan period.
+ *
+ * <p>Both operations must produce a loan whose due date is computed
+ * with the same rule so that the policy is applied consistently.</p>
+ */
 class DueDateDuplicationTest {
 
+    /** Service under test for checkout. */
     private MemberService memberService;
+
+    /** Service under test for reservation fulfillment. */
     private ReservationService reservationService;
+
+    /** Book shared between the checkout and reservation scenarios. */
     private Book book;
+
+    /** Member used to perform checkout and reservation. */
     private Member member;
 
+    /**
+     * Sets up an in-memory database and seeds it with one book and one member.
+     *
+     * @throws Exception if DAO initialization fails
+     */
     @BeforeEach
     void setUp() throws Exception {
         Database db = new Database("jdbc:sqlite::memory:");
@@ -40,6 +61,11 @@ class DueDateDuplicationTest {
         memberDao.create(member);
     }
 
+    /**
+     * Checks that checkout and fulfill produce loans with the same due date.
+     *
+     * @throws Exception if any service call fails
+     */
     @Test
     void checkoutAndFulfillUseTheSameLoanPeriod() throws Exception {
         Loan fromCheckout = memberService.checkout(member.getId(), book.getId());

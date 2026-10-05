@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2026. Arquitectura de Sistemas, DISC, UCN, Antofagasta.
+ */
 package cl.ucn.disc.arqsist.library.db;
 
 import cl.ucn.disc.arqsist.library.model.Book;
@@ -14,10 +17,23 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Manages the database connection and initial seed data.
+ *
+ * <p>Creates the SQLite schema via ORMLite's {@link TableUtils} and populates
+ * the tables with representative sample data on first startup.</p>
+ */
 public final class Database {
 
+    /** The active ORMLite connection source. */
     private final ConnectionSource connectionSource;
 
+    /**
+     * Opens a JDBC connection and creates all required tables if they do not exist.
+     *
+     * @param jdbcUrl the JDBC URL for the SQLite database (e.g. {@code jdbc:sqlite:database.sqlite})
+     * @throws SQLException if the connection or table creation fails
+     */
     public Database(String jdbcUrl) throws SQLException {
         this.connectionSource = new JdbcConnectionSource(jdbcUrl);
         TableUtils.createTableIfNotExists(connectionSource, Book.class);
@@ -26,10 +42,23 @@ public final class Database {
         TableUtils.createTableIfNotExists(connectionSource, Reservation.class);
     }
 
+    /**
+     * Returns the active connection source for use by DAOs.
+     *
+     * @return the {@link ConnectionSource}
+     */
     public ConnectionSource connectionSource() {
         return connectionSource;
     }
 
+    /**
+     * Seeds the database with sample data if the tables are empty.
+     *
+     * <p>Inserts three books, six members, three loans (one returned, one active,
+     * one overdue), and two reservations the first time the application starts.</p>
+     *
+     * @throws SQLException if any insert or query fails
+     */
     public void seedIfEmpty() throws SQLException {
         Dao<Book, Integer> bookDao = DaoManager.createDao(connectionSource, Book.class);
         if (bookDao.queryForAll().isEmpty()) {
@@ -70,7 +99,20 @@ public final class Database {
         }
     }
 
-    private void createLoan(Dao<Book, Integer> bookDao, Dao<Loan, Integer> loanDao, Member member, Book book, LocalDate loanDate, LocalDate dueDate) throws SQLException {
+    /**
+     * Helper that creates a loan and decrements the book's available copies.
+     *
+     * @param bookDao  the ORMLite book DAO
+     * @param loanDao  the ORMLite loan DAO
+     * @param member   the borrowing member
+     * @param book     the borrowed book
+     * @param loanDate the loan creation date
+     * @param dueDate  the loan due date
+     * @throws SQLException if any persistence operation fails
+     */
+    private void createLoan(Dao<Book, Integer> bookDao, Dao<Loan, Integer> loanDao,
+                            Member member, Book book,
+                            LocalDate loanDate, LocalDate dueDate) throws SQLException {
         loanDao.create(new Loan(member, book, loanDate.toString(), dueDate.toString()));
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookDao.update(book);

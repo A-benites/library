@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2026. Arquitectura de Sistemas, DISC, UCN, Antofagasta.
+ */
 package cl.ucn.disc.arqsist.library.dao;
 
 import cl.ucn.disc.arqsist.library.model.Member;
@@ -8,26 +11,64 @@ import com.j256.ormlite.support.ConnectionSource;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Data access object for {@link Member} entities.
+ *
+ * <p>Wraps an ORMLite {@link Dao} and provides typed CRUD operations
+ * for the {@code members} table.</p>
+ */
 public final class MemberDao {
 
+    /** The underlying ORMLite DAO. */
     private final Dao<Member, Integer> dao;
 
+    /**
+     * Creates a new {@code MemberDao}.
+     *
+     * @param connectionSource the active database connection source
+     * @throws SQLException if ORMLite cannot create the internal DAO
+     */
     public MemberDao(ConnectionSource connectionSource) throws SQLException {
         this.dao = DaoManager.createDao(connectionSource, Member.class);
     }
 
+    /**
+     * Returns all members in the database.
+     *
+     * @return a list of all {@link Member} entities; never {@code null}
+     * @throws SQLException if the query fails
+     */
     public List<Member> findAll() throws SQLException {
         return dao.queryForAll();
     }
 
+    /**
+     * Finds a member by its primary key.
+     *
+     * @param id the member's primary key
+     * @return the {@link Member}, or {@code null} if not found
+     * @throws SQLException if the query fails
+     */
     public Member findById(int id) throws SQLException {
         return dao.queryForId(id);
     }
 
+    /**
+     * Persists a new member.
+     *
+     * @param member the member to create; must not be {@code null}
+     * @throws SQLException if the insert fails
+     */
     public void create(Member member) throws SQLException {
         dao.create(member);
     }
 
+    /**
+     * Updates an existing member.
+     *
+     * @param member the member to update; must not be {@code null}
+     * @throws SQLException if the update fails
+     */
     public void update(Member member) throws SQLException {
         dao.update(member);
     }
