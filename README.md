@@ -13,8 +13,8 @@ As a user you can:
 - Reserve a book and fulfill the reservation once a copy is available.
 - See which loans are overdue and what late fees apply.
 
-Everything runs in a single web app backed by a local SQLite database, so there is nothing else to install or configure:
-start it and it's ready to use.
+Everything runs in a single web app backed by a local SQLite database. The only prerequisite is Java 21 or newer;
+Gradle dependencies are downloaded automatically by the wrapper.
 
 ## Using the app
 
@@ -90,14 +90,57 @@ docs/class-diagram.puml           # PlantUML class diagram
 
 ## Run
 
+### Prerequisites
+
+You need a JDK version 21 or newer. Gradle does not need to be installed separately because the project includes the
+Gradle Wrapper.
+
+On Windows:
+
+1. Install a JDK 21 or newer, for example from [Adoptium](https://adoptium.net/) or
+   [Oracle](https://www.oracle.com/java/technologies/downloads/).
+2. Find the JDK installation directory. It is usually similar to
+   `C:\Program Files\Java\jdk-21` or `C:\Program Files\Eclipse Adoptium\jdk-21...`.
+3. Open **PowerShell as the current user** and set `JAVA_HOME`, replacing the path with the directory found in the
+   previous step:
+
+```powershell
+[Environment]::SetEnvironmentVariable("JAVA_HOME", "C:\Program Files\Java\jdk-21", "User")
+```
+
+4. Close PowerShell and open a new PowerShell window so that the environment variables are reloaded.
+5. Verify the installation:
+
+```powershell
+$env:JAVA_HOME
+java -version
+```
+
+The first command must print the JDK directory and the second must report version 21 or newer.
+
+On Linux or macOS, install JDK 21 or newer and configure `JAVA_HOME` according to the operating system. Verify it with
+`echo $JAVA_HOME` and `java -version`.
+
+### Start the application
+
+Then run the wrapper for your operating system:
+
+Windows PowerShell:
+
+```powershell
+.\gradlew.bat run
+```
+
+Linux/macOS:
+
 ```bash
 ./gradlew run
 ```
 
 Then open http://localhost:7070
 
-The SQLite database file `database.sqlite` is created in the project directory on first run and seeded with a few books
-and members.
+The SQLite database file `database.db` is created in the project directory on first run and seeded with books, members,
+loans, and a reservation. Open the application at http://localhost:7070.
 
 ## REST API
 
@@ -159,6 +202,8 @@ curl -X POST http://localhost:7070/reservations/1/fulfill
 ```bash
 ./gradlew build
 ```
+
+On Windows, use `.\gradlew.bat build`.
 
 ---
 &copy; 2026 Diego Urrutia-Astorga, Arquitectura de Software, Universidad Católica del Norte.

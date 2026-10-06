@@ -35,7 +35,7 @@ public final class Database {
     /**
      * Opens a JDBC connection and creates all required tables if they do not exist.
      *
-     * @param jdbcUrl the JDBC URL for the SQLite database (e.g. {@code jdbc:sqlite:database.sqlite})
+     * @param jdbcUrl the JDBC URL for the SQLite database (e.g. {@code jdbc:sqlite:database.db})
      * @throws SQLException if the connection or table creation fails
      */
     public Database(String jdbcUrl) throws SQLException {
@@ -58,8 +58,8 @@ public final class Database {
     /**
      * Seeds the database with sample data if the tables are empty.
      *
-     * <p>Inserts three books, six members, three loans (one returned, one active,
-     * one overdue), and two reservations the first time the application starts.</p>
+     * <p>Inserts three books, three members, three loans (one returned, one active,
+     * one overdue), and one reservation the first time the application starts.</p>
      *
      * @throws SQLException if any insert or query fails
      */
