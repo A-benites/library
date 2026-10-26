@@ -104,14 +104,22 @@ public final class ReservationService {
         if (reservation.isFulfilled()) {
             throw new IllegalStateException("Reservation already fulfilled: " + reservationId);
         }
+        Member member = memberDao.findById(reservation.getMember().getId());
+        if (member == null) {
+            throw new NotFoundException("Member not found: " + reservation.getMember().getId());
+        }
+        Book book = bookService.findById(reservation.getBook().getId());
+        if (book == null) {
+            throw new NotFoundException("Book not found: " + reservation.getBook().getId());
+        }
 
         LocalDate today = LocalDate.now(clock);
         try {
             return reservationDao.transaction(() -> {
-                bookService.borrow(reservation.getBook().getId());
+                bookService.borrow(book.getId());
                 reservation.setFulfilled(true);
                 reservationDao.update(reservation);
-                Loan loan = new Loan(reservation.getMember(), reservation.getBook(),
+                Loan loan = new Loan(member, book,
                         today, LoanPolicy.dueDate(today));
                 loanDao.create(loan);
                 return loan;
