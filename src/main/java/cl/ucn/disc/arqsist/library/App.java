@@ -22,15 +22,24 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.json.JavalinJackson;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.Map;
 
 public final class App {
 
+    private static final Logger log = LoggerFactory.getLogger(App.class);
+
+    private App() {
+    }
+
     public static void main(String[] args) throws Exception {
         Database db = new Database("jdbc:sqlite:database.db");
         db.seedIfEmpty();
+        log.info("Database initialized");
 
         BookDao bookDao = new BookDao(db.connectionSource());
         MemberDao memberDao = new MemberDao(db.connectionSource());
@@ -69,5 +78,6 @@ public final class App {
             loanController.register(config);
             reservationController.register(config);
         }).start(7070);
+        log.info("Library application started on port 7070");
     }
 }
