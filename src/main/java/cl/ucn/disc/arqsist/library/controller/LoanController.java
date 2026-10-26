@@ -8,12 +8,23 @@ import io.javalin.config.JavalinConfig;
 
 public final class LoanController {
 
+    /** Service that owns loan operations. */
     private final LoanService loanService;
 
+    /**
+     * Creates a controller backed by the given service.
+     *
+     * @param loanService the loan service
+     */
     public LoanController(LoanService loanService) {
         this.loanService = loanService;
     }
 
+    /**
+     * Registers the loan routes.
+     *
+     * @param config the Javalin configuration
+     */
     public void register(JavalinConfig config) {
         config.routes.post("/loans", ctx -> {
             int memberId = Integer.parseInt(ctx.queryParam("memberId"));

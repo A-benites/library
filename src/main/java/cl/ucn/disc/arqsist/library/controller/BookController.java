@@ -9,11 +9,23 @@ import io.javalin.config.JavalinConfig;
 
 public final class BookController {
 
+    /** Service that owns book catalog and inventory operations. */
     private final BookService service;
+
+    /**
+     * Creates a controller backed by the given service.
+     *
+     * @param service the book service
+     */
     public BookController(BookService service) {
         this.service = service;
     }
 
+    /**
+     * Registers the book routes.
+     *
+     * @param config the Javalin configuration
+     */
     public void register(JavalinConfig config) {
         config.routes.get("/books", ctx -> ctx.json(service.listAll()));
         config.routes.get("/books/{id}", ctx -> ctx.json(service.findById(Integer.parseInt(ctx.pathParam("id")))));

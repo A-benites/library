@@ -8,12 +8,23 @@ import io.javalin.config.JavalinConfig;
 
 public final class ReservationController {
 
+    /** Service that owns reservation operations. */
     private final ReservationService service;
 
+    /**
+     * Creates a controller backed by the given service.
+     *
+     * @param service the reservation service
+     */
     public ReservationController(ReservationService service) {
         this.service = service;
     }
 
+    /**
+     * Registers the reservation routes.
+     *
+     * @param config the Javalin configuration
+     */
     public void register(JavalinConfig config) {
         config.routes.post("/reservations", ctx -> {
             int memberId = Integer.parseInt(ctx.queryParam("memberId"));
