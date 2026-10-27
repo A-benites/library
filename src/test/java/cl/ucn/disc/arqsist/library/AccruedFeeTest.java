@@ -19,7 +19,14 @@ import java.time.ZoneOffset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
+/** Verifies accrued fees for overdue and active open loans. */
 class AccruedFeeTest {
+
+    /**
+     * Confirms that an overdue loan accrues the expected fee at a fixed date.
+     *
+     * @throws Exception if the in-memory database cannot be initialized
+     */
     @Test
     void computesFeeForOpenOverdueLoans() throws Exception {
         Database db = new Database("jdbc:sqlite::memory:");

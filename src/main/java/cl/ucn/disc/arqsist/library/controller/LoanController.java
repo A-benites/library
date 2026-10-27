@@ -6,6 +6,7 @@ package cl.ucn.disc.arqsist.library.controller;
 import cl.ucn.disc.arqsist.library.service.LoanService;
 import io.javalin.config.JavalinConfig;
 
+/** HTTP controller for checkout, return, and overdue-loan operations. */
 public final class LoanController {
 
     /** Service that owns loan operations. */

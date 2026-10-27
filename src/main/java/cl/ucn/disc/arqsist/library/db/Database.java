@@ -27,6 +27,7 @@ import java.util.List;
  */
 public final class Database {
 
+    /** Logger for database initialization and seed-data events. */
     private static final Logger log = LoggerFactory.getLogger(Database.class);
 
     /** The active ORMLite connection source. */

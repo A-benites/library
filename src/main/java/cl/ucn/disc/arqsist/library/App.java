@@ -29,13 +29,22 @@ import java.time.Clock;
 import java.time.ZoneId;
 import java.util.Map;
 
+/** Application entry point and manual dependency-wiring root. */
 public final class App {
 
+    /** Logger for startup and configuration events. */
     private static final Logger log = LoggerFactory.getLogger(App.class);
 
+    /** Prevents construction of the application entry-point class. */
     private App() {
     }
 
+    /**
+     * Initializes persistence, wires the application, and starts the HTTP server.
+     *
+     * @param args command-line arguments (currently unused)
+     * @throws Exception if database initialization or server startup fails
+     */
     public static void main(String[] args) throws Exception {
         Database db = new Database("jdbc:sqlite:database.db");
         db.seedIfEmpty();

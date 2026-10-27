@@ -13,6 +13,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Application service for {@link Loan} management.
@@ -67,6 +68,7 @@ public final class LoanService {
      * @return the updated {@link Loan}
      * @throws NotFoundException if the loan does not exist
      * @throws IllegalStateException if the loan was already returned
+     * @throws RuntimeException if a database operation fails
      */
     public Loan returnLoan(int loanId) {
         Loan loan = loanDao.findById(loanId);
@@ -108,6 +110,9 @@ public final class LoanService {
      * @param memberId the member ID
      * @param bookId the book ID
      * @return the new loan
+     * @throws NotFoundException if the member or book does not exist
+     * @throws IllegalStateException if no copies are available
+     * @throws RuntimeException if a database operation fails
      */
     public Loan checkout(int memberId, int bookId) {
         var member = memberDao.findById(memberId);
@@ -127,7 +132,15 @@ public final class LoanService {
         });
     }
 
-    private <R> R transaction(java.util.concurrent.Callable<R> callable) {
+    /**
+     * Runs lending work atomically and translates checked database failures.
+     *
+     * @param <R> the result type
+     * @param callable the work to execute inside the transaction
+     * @return the result produced by the work
+     * @throws RuntimeException if the transaction fails
+     */
+    private <R> R transaction(Callable<R> callable) {
         try {
             return loanDao.transaction(callable);
         } catch (SQLException e) {
@@ -135,6 +148,12 @@ public final class LoanService {
         }
     }
 
+    /**
+     * Adds current accrued fees to open overdue loans without persisting them.
+     *
+     * @param loans loans to update for the response
+     * @return the same list with accrued fees applied
+     */
     private List<Loan> withAccruedFees(List<Loan> loans) {
         LocalDate today = LocalDate.now(clock);
         loans.stream()
@@ -143,6 +162,13 @@ public final class LoanService {
         return loans;
     }
 
+    /**
+     * Computes the fee accrued between a loan's due date and a given date.
+     *
+     * @param loan the overdue loan
+     * @param today the date through which the fee is calculated
+     * @return the accrued fee in local currency
+     */
     private double accruedFee(Loan loan, LocalDate today) {
         return ChronoUnit.DAYS.between(loan.getDueDate(), today) * LoanPolicy.FEE_PER_DAY;
     }

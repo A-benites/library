@@ -6,6 +6,7 @@ package cl.ucn.disc.arqsist.library.controller;
 import cl.ucn.disc.arqsist.library.service.ReservationService;
 import io.javalin.config.JavalinConfig;
 
+/** HTTP controller for creating and fulfilling reservations. */
 public final class ReservationController {
 
     /** Service that owns reservation operations. */

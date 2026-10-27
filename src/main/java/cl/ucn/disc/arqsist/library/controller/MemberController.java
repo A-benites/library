@@ -7,6 +7,7 @@ import cl.ucn.disc.arqsist.library.model.Member;
 import cl.ucn.disc.arqsist.library.service.MemberService;
 import io.javalin.config.JavalinConfig;
 
+/** HTTP controller for member registration and retrieval. */
 public final class MemberController {
 
     /** Service that owns member operations. */

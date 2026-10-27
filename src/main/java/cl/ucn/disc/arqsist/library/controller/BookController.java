@@ -7,6 +7,7 @@ import cl.ucn.disc.arqsist.library.model.Book;
 import cl.ucn.disc.arqsist.library.service.BookService;
 import io.javalin.config.JavalinConfig;
 
+/** HTTP controller for catalog operations. */
 public final class BookController {
 
     /** Service that owns book catalog and inventory operations. */

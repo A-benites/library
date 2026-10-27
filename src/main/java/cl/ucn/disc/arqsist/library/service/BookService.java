@@ -6,7 +6,6 @@ package cl.ucn.disc.arqsist.library.service;
 import cl.ucn.disc.arqsist.library.dao.BookDao;
 import cl.ucn.disc.arqsist.library.model.Book;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public final class BookService {
      * Returns all books in the catalog.
      *
      * @return a list of all books; never {@code null}
-     * @throws SQLException if the query fails
+     * @throws RuntimeException if the database query fails
      */
     public List<Book> listAll() {
         return dao.findAll();
@@ -44,7 +43,7 @@ public final class BookService {
      *
      * @param id the book's primary key
      * @return the {@link Book}, or {@code null} if not found
-     * @throws SQLException if the query fails
+     * @throws RuntimeException if the database query fails
      */
     public Book findById(int id) {
         return dao.findById(id);
@@ -57,7 +56,7 @@ public final class BookService {
      *
      * @param book the book to add; must not be {@code null}
      * @return the persisted book with its generated ID
-     * @throws SQLException if the insert fails
+     * @throws RuntimeException if persistence fails
      */
     public Book create(Book book) {
         book.setAvailableCopies(book.getTotalCopies());
@@ -69,7 +68,9 @@ public final class BookService {
      * Decrements the available copy count when a book is borrowed.
      *
      * @param bookId the ID of the book being borrowed
-     * @throws SQLException if the update fails
+     * @throws NotFoundException if the book does not exist
+     * @throws IllegalStateException if no copies are available
+     * @throws RuntimeException if the database update fails
      */
     public void borrow(int bookId) {
         Book book = dao.findById(bookId);
@@ -87,7 +88,8 @@ public final class BookService {
      * Increments the available copy count when a book is returned.
      *
      * @param bookId the ID of the book being returned
-     * @throws SQLException if the update fails
+     * @throws NotFoundException if the book does not exist
+     * @throws RuntimeException if the database update fails
      */
     public void returnCopy(int bookId) {
         Book book = dao.findById(bookId);

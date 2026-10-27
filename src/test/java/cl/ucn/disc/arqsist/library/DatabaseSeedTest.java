@@ -11,7 +11,14 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+/** Verifies the seeded record counts and inventory consistency. */
 class DatabaseSeedTest {
+
+    /**
+     * Confirms expected seed data and that repeated seeding is idempotent.
+     *
+     * @throws Exception if the in-memory database cannot be initialized
+     */
     @Test
     void seedsExpectedDataOnlyOnce() throws Exception {
         Database db = new Database("jdbc:sqlite::memory:");

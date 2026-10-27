@@ -53,6 +53,7 @@ public final class LocalDatePersister extends BaseDataType {
      *
      * @param results   the current result-set row
      * @param columnPos the zero-based column index
+     * @param fieldType the ORMLite field descriptor
      * @return the raw string stored in the column
      * @throws SQLException if the column cannot be read
      */

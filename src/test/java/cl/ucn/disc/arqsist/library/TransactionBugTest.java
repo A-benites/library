@@ -19,11 +19,20 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/** Verifies that a failed checkout leaves inventory unchanged. */
 class TransactionBugTest {
 
+    /** DAO used to inspect the persisted book inventory. */
     private BookDao bookDao;
+
+    /** Lending service under test. */
     private LoanService loanService;
 
+    /**
+     * Creates an isolated database and the lending service for each test.
+     *
+     * @throws Exception if the in-memory database cannot be initialized
+     */
     @BeforeEach
     void setUp() throws Exception {
         Database db = new Database("jdbc:sqlite::memory:");
@@ -34,6 +43,11 @@ class TransactionBugTest {
                 Clock.system(ZoneId.of("America/Santiago")));
     }
 
+    /**
+     * Confirms that a missing member does not partially decrement inventory.
+     *
+     * @throws Exception if the in-memory database cannot be initialized
+     */
     @Test
     void checkoutLeavesNoPartialStateOnFailure() throws Exception {
         Book book = new Book("Clean Code", "Robert C. Martin", "9780132350884", 2);
