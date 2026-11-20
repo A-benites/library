@@ -61,4 +61,19 @@ public final class MemberService {
         }
         return member;
     }
+
+    /**
+     * Finds members whose names contain a case-insensitive fragment.
+     *
+     * @param query the name fragment to find; leading and trailing whitespace is ignored
+     * @return matching members ordered by ID
+     * @throws IllegalArgumentException if the query is blank
+     */
+    public List<Member> search(String query) {
+        String trimmedQuery = query.trim();
+        if (trimmedQuery.isEmpty()) {
+            throw new IllegalArgumentException("Search query must not be blank");
+        }
+        return memberDao.searchByName(trimmedQuery);
+    }
 }
