@@ -113,13 +113,14 @@ On Windows:
 
 ```powershell
 $env:JAVA_HOME
-java -version
+& "$env:JAVA_HOME\bin\java.exe" -version
 ```
 
-The first command must print the JDK directory and the second must report version 21 or newer.
+The first command must print the JDK directory and the second must report version 21 or newer. This checks the JDK in
+`JAVA_HOME` directly, even if another Java version appears earlier on `PATH`.
 
 On Linux or macOS, install JDK 21 or newer and configure `JAVA_HOME` according to the operating system. Verify it with
-`echo $JAVA_HOME` and `java -version`.
+`echo $JAVA_HOME` and `"$JAVA_HOME/bin/java" -version`.
 
 ### Start the application
 

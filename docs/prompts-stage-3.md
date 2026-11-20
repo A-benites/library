@@ -10,7 +10,7 @@ usuario de crear commits pequeños y conservar un apéndice detallado guio el fl
       <th>Número</th>
       <th>Modelo</th>
       <th>Prompt exacto</th>
-      <th>Archivos modificados</th>
+      <th>Archivos y configuración modificados</th>
     </tr>
   </thead>
   <tbody>
@@ -76,6 +76,32 @@ sintaxis compatible; verifica también el build con el JDK 27 instalado, que cum
         <li><code>README.md</code></li>
         <li><code>docs/class-diagram.puml</code></li>
         <li><code>docs/prompts-stage-3.md</code></li>
+      </ul></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>GPT-6 (Codex; la sesión no expone el identificador exacto de la variante)</td>
+      <td><pre>Soluciona todo para que quede con el jdk correspondiente, ademas no te olvides de los commits
+
+Continúa el ajuste del Stage 3 para que el proyecto compile y ejecute con el JDK que pide la especificación: Java 21 o
+posterior. Usa el JDK 21 Temurin ya instalado en C:\Users\amirb\jdk-21. Configura JAVA_HOME persistente para el usuario
+y ajusta el proceso actual para verificar con esa instalación. En build.gradle fija options.release en 21 para que el
+bytecode y las API usadas correspondan a Java 21 aunque se compile desde una versión más nueva. Actualiza README.md
+para verificar directamente el ejecutable que está bajo JAVA_HOME, evitando que otro java.exe anterior en PATH dé un
+resultado engañoso.
+
+Alinea la configuración local de IntelliJ al nivel y bytecode 21, y configura Gradle en el IDE para usar JAVA_HOME.
+Mantén esa configuración .idea local fuera de los commits. Ejecuta generateProto, el build completo y la lista de tareas
+de aplicación con JDK 21; confirma con javap que App.class tiene major version 65. Haz commits pequeños para los cambios
+versionados y registra este ajuste en el log de prompts.</pre></td>
+      <td><ul>
+        <li><code>build.gradle</code> (commit)</li>
+        <li><code>README.md</code> (commit)</li>
+        <li><code>docs/prompts-stage-3.md</code> (commit)</li>
+        <li><code>.idea/misc.xml</code> (configuración local, fuera del commit)</li>
+        <li><code>.idea/compiler.xml</code> (configuración local, fuera del commit)</li>
+        <li><code>.idea/gradle.xml</code> (configuración local, fuera del commit)</li>
+        <li><code>JAVA_HOME</code> del usuario apunta a <code>C:\Users\amirb\jdk-21</code></li>
       </ul></td>
     </tr>
   </tbody>
