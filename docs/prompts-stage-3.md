@@ -54,8 +54,8 @@ interpoles el texto de búsqueda en SQL. Agrega MemberSearchTest a través del t
 
 Verifica generateProto, build, los dos tests específicos, el inicio de la aplicación y los comandos runClient para IDs
 existentes y ausentes. Ejecuta el smoke test con una base de datos temporal para preservar database.db del usuario.
-Mantén los cambios acotados al Stage 3 y registra las limitaciones del entorno: el plan presupone JDK 21+, pero esta
-sesión dispone de JDK 17; conserva el mismo mapeo de errores usando sintaxis compatible con el JDK disponible.
+Mantén los cambios acotados al Stage 3. El PATH inicial apunta a JDK 17, por lo que implementa el mapeo de errores con
+sintaxis compatible; verifica también el build con el JDK 27 instalado, que cumple el prerrequisito JDK 21+.
 ```
 
 **Archivos modificados:**
@@ -73,4 +73,3 @@ sesión dispone de JDK 17; conserva el mismo mapeo de errores usando sintaxis co
 - `README.md`
 - `docs/class-diagram.puml`
 - `docs/prompts-stage-3.md`
-
