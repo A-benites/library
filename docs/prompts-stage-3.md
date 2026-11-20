@@ -90,10 +90,11 @@ bytecode y las API usadas correspondan a Java 21 aunque se compile desde una ver
 para verificar directamente el ejecutable que está bajo JAVA_HOME, evitando que otro java.exe anterior en PATH dé un
 resultado engañoso.
 
-Alinea la configuración local de IntelliJ al nivel y bytecode 21, y configura Gradle en el IDE para usar JAVA_HOME.
-Mantén esa configuración .idea local fuera de los commits. Ejecuta generateProto, el build completo y la lista de tareas
-de aplicación con JDK 21; confirma con javap que App.class tiene major version 65. Haz commits pequeños para los cambios
-versionados y registra este ajuste en el log de prompts.</pre></td>
+Alinea IntelliJ con el JDK 21 instalado: regístralo en la tabla de SDKs, selecciónalo como SDK del proyecto, fija el
+nivel de lenguaje y bytecode en 21 y configura Gradle en el IDE para usar JAVA_HOME. Mantén .idea y la tabla global de
+SDKs fuera de los commits. Ejecuta generateProto, el build completo y la lista de tareas de aplicación con JDK 21;
+confirma con javap que App.class tiene major version 65. Haz commits pequeños para los cambios versionados y registra
+este ajuste en el log de prompts.</pre></td>
       <td><ul>
         <li><code>build.gradle</code> (commit)</li>
         <li><code>README.md</code> (commit)</li>
@@ -101,6 +102,7 @@ versionados y registra este ajuste en el log de prompts.</pre></td>
         <li><code>.idea/misc.xml</code> (configuración local, fuera del commit)</li>
         <li><code>.idea/compiler.xml</code> (configuración local, fuera del commit)</li>
         <li><code>.idea/gradle.xml</code> (configuración local, fuera del commit)</li>
+        <li><code>IntelliJIdea2026.2/options/jdk.table.xml</code> (SDK local, fuera del commit)</li>
         <li><code>JAVA_HOME</code> del usuario apunta a <code>C:\Users\amirb\jdk-21</code></li>
       </ul></td>
     </tr>
