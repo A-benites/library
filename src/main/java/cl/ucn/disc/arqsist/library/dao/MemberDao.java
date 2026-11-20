@@ -4,6 +4,7 @@
 package cl.ucn.disc.arqsist.library.dao;
 
 import cl.ucn.disc.arqsist.library.model.Member;
+import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 
@@ -35,7 +36,7 @@ public final class MemberDao extends BaseDao<Member> {
     public List<Member> searchByName(String query) {
         try {
             var queryBuilder = dao.queryBuilder();
-            queryBuilder.where().raw("instr(lower(name), lower(?)) > 0", new SelectArg(query));
+            queryBuilder.where().raw("instr(lower(name), lower(?)) > 0", new SelectArg(SqlType.STRING, query));
             queryBuilder.orderBy("id", true);
             return queryBuilder.query();
         } catch (SQLException e) {
