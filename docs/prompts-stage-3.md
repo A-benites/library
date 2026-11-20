@@ -1,17 +1,23 @@
 # Apéndice C — Log de prompts de Stage 3
 
-Este registro documenta el encargo de implementación del Stage 3 y los archivos que cambiaron. La especificación fue el
+Este registro conserva el prompt de implementación del Stage 3 y los archivos que cambiaron. La especificación fue el
 PDF `refactor.stage-3.pdf`; sus requisitos se trataron como criterios del proyecto, mientras que la instrucción del
 usuario de crear commits pequeños y conservar un apéndice detallado guio el flujo de trabajo.
 
-## 1. Implementación completa de Stage 3
-
-**Modelo:** GPT-6 (Codex; la sesión no expone el identificador exacto de la variante)
-
-**Prompt utilizado:**
-
-```text
-Actúa como un desarrollador senior de Java y continúa el refactor de Project Library con el Stage 3 descrito en
+<table>
+  <thead>
+    <tr>
+      <th>Número</th>
+      <th>Modelo</th>
+      <th>Prompt exacto</th>
+      <th>Archivos modificados</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>GPT-6 (Codex; la sesión no expone el identificador exacto de la variante)</td>
+      <td><pre>Actúa como un desarrollador senior de Java y continúa el refactor de Project Library con el Stage 3 descrito en
 refactor.stage-3.pdf. El repositorio parte del final del Stage 2. Trata el PDF como especificación del proyecto y
 aplica sus cambios guiados, su ejercicio, la definición de terminado y su matriz de verificación. La petición del
 usuario prevalece para el flujo Git: crea commits pequeños y coherentes por cambio, no un único commit atómico, y deja
@@ -55,21 +61,22 @@ interpoles el texto de búsqueda en SQL. Agrega MemberSearchTest a través del t
 Verifica generateProto, build, los dos tests específicos, el inicio de la aplicación y los comandos runClient para IDs
 existentes y ausentes. Ejecuta el smoke test con una base de datos temporal para preservar database.db del usuario.
 Mantén los cambios acotados al Stage 3. El PATH inicial apunta a JDK 17, por lo que implementa el mapeo de errores con
-sintaxis compatible; verifica también el build con el JDK 27 instalado, que cumple el prerrequisito JDK 21+.
-```
-
-**Archivos modificados:**
-
-- `build.gradle`
-- `src/main/proto/member.proto`
-- `src/main/java/cl/ucn/disc/arqsist/library/App.java`
-- `src/main/java/cl/ucn/disc/arqsist/library/MemberClientApp.java`
-- `src/main/java/cl/ucn/disc/arqsist/library/dao/MemberDao.java`
-- `src/main/java/cl/ucn/disc/arqsist/library/grpc/MemberClient.java`
-- `src/main/java/cl/ucn/disc/arqsist/library/grpc/MemberGrpcService.java`
-- `src/main/java/cl/ucn/disc/arqsist/library/service/MemberService.java`
-- `src/test/java/cl/ucn/disc/arqsist/library/MemberGrpcTest.java`
-- `src/test/java/cl/ucn/disc/arqsist/library/MemberSearchTest.java`
-- `README.md`
-- `docs/class-diagram.puml`
-- `docs/prompts-stage-3.md`
+sintaxis compatible; verifica también el build con el JDK 27 instalado, que cumple el prerrequisito JDK 21+.</pre></td>
+      <td><ul>
+        <li><code>build.gradle</code></li>
+        <li><code>src/main/proto/member.proto</code></li>
+        <li><code>src/main/java/cl/ucn/disc/arqsist/library/App.java</code></li>
+        <li><code>src/main/java/cl/ucn/disc/arqsist/library/MemberClientApp.java</code></li>
+        <li><code>src/main/java/cl/ucn/disc/arqsist/library/dao/MemberDao.java</code></li>
+        <li><code>src/main/java/cl/ucn/disc/arqsist/library/grpc/MemberClient.java</code></li>
+        <li><code>src/main/java/cl/ucn/disc/arqsist/library/grpc/MemberGrpcService.java</code></li>
+        <li><code>src/main/java/cl/ucn/disc/arqsist/library/service/MemberService.java</code></li>
+        <li><code>src/test/java/cl/ucn/disc/arqsist/library/MemberGrpcTest.java</code></li>
+        <li><code>src/test/java/cl/ucn/disc/arqsist/library/MemberSearchTest.java</code></li>
+        <li><code>README.md</code></li>
+        <li><code>docs/class-diagram.puml</code></li>
+        <li><code>docs/prompts-stage-3.md</code></li>
+      </ul></td>
+    </tr>
+  </tbody>
+</table>
