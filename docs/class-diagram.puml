@@ -25,6 +25,10 @@ skinparam package<<db>> {
   BackgroundColor #F3E5F5
   BorderColor #7B1FA2
 }
+skinparam package<<grpc>> {
+  BackgroundColor #E8F5FA
+  BorderColor #00838F
+}
 hide stereotype
 
 package "controller" <<controller>> {
@@ -96,6 +100,43 @@ package "service" <<service>> {
   class NotFoundException {
     + NotFoundException(String)
   }
+}
+
+package "grpc" <<grpc>> {
+  class MemberGrpcService {
+    + {static} String HOST
+    + {static} int PORT
+    - MemberService memberService
+    + registerMember(RegisterMemberRequest, StreamObserver<MemberMessage>) : void
+    + listMembers(ListMembersRequest, StreamObserver<ListMembersReply>) : void
+    + getMember(GetMemberRequest, StreamObserver<MemberMessage>) : void
+    + searchMembers(SearchMembersRequest, StreamObserver<ListMembersReply>) : void
+  }
+
+  class MemberClient {
+    - ManagedChannel channel
+    - MemberServiceBlockingStub stub
+    + MemberClient(String, int)
+    + MemberClient(ManagedChannel)
+    + register(Member) : Member
+    + findAll() : List<Member>
+    + findById(int) : Member
+    + search(String) : List<Member>
+    + close() : void
+  }
+
+  class MemberClientApp {
+    + {static} main(String[]) : void
+  }
+
+  abstract class MemberServiceImplBase <<generated>>
+  class MemberServiceBlockingStub <<generated>>
+  class MemberMessage <<generated>>
+  class RegisterMemberRequest <<generated>>
+  class ListMembersRequest <<generated>>
+  class ListMembersReply <<generated>>
+  class GetMemberRequest <<generated>>
+  class SearchMembersRequest <<generated>>
 }
 
 package "dao" <<dao>> {
@@ -241,6 +282,20 @@ BookController "1" --> "1" BookService
 LoanController "1" --> "1" LoanService
 MemberController "1" --> "1" MemberService
 ReservationController "1" --> "1" ReservationService
+MemberGrpcService --|> MemberServiceImplBase
+MemberGrpcService "1" --> "1" MemberService : adapts
+MemberGrpcService ..> Member : converts
+MemberGrpcService ..> NotFoundException
+MemberClient --> MemberServiceBlockingStub
+MemberClient ..> MemberMessage
+MemberClient --> Member
+MemberClient ..> NotFoundException
+MemberClientApp --> MemberClient
+MemberGrpcService ..> RegisterMemberRequest
+MemberGrpcService ..> ListMembersRequest
+MemberGrpcService ..> ListMembersReply
+MemberGrpcService ..> GetMemberRequest
+MemberGrpcService ..> SearchMembersRequest
 
 ' ----- service -> dao -----
 BookService "1" --> "1" BookDao
