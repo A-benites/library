@@ -16,7 +16,7 @@ usuario de crear commits pequeños y conservar un apéndice detallado guio el fl
   <tbody>
     <tr>
       <td>1</td>
-      <td>GPT-6 (Codex; la sesión no expone el identificador exacto de la variante)</td>
+      <td>GPT-6 Luna</td>
       <td><pre>Actúa como un desarrollador senior de Java y continúa el refactor de Project Library con el Stage 3 descrito en
 refactor.stage-3.pdf. El repositorio parte del final del Stage 2. Trata el PDF como especificación del proyecto y
 aplica sus cambios guiados, su ejercicio, la definición de terminado y su matriz de verificación. La petición del
@@ -80,7 +80,7 @@ sintaxis compatible; verifica también el build con el JDK 27 instalado, que cum
     </tr>
     <tr>
       <td>2</td>
-      <td>GPT-6 (Codex; la sesión no expone el identificador exacto de la variante)</td>
+      <td>GPT-6 Luna</td>
       <td><pre>Soluciona todo para que quede con el jdk correspondiente, ademas no te olvides de los commits
 
 Continúa el ajuste del Stage 3 para que el proyecto compile y ejecute con el JDK que pide la especificación: Java 21 o
