@@ -12,6 +12,7 @@ import cl.ucn.disc.arqsist.library.dao.LoanDao;
 import cl.ucn.disc.arqsist.library.dao.MemberDao;
 import cl.ucn.disc.arqsist.library.dao.ReservationDao;
 import cl.ucn.disc.arqsist.library.db.Database;
+import cl.ucn.disc.arqsist.library.grpc.MemberGrpcService;
 import cl.ucn.disc.arqsist.library.service.BookService;
 import cl.ucn.disc.arqsist.library.service.LoanService;
 import cl.ucn.disc.arqsist.library.service.MemberService;
@@ -19,15 +20,19 @@ import cl.ucn.disc.arqsist.library.service.ReservationService;
 import cl.ucn.disc.arqsist.library.service.NotFoundException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.grpc.Server;
+import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.javalin.json.JavalinJackson;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /** Application entry point and manual dependency-wiring root. */
 public final class App {
@@ -62,12 +67,23 @@ public final class App {
         ReservationService reservationService = new ReservationService(
                 reservationDao, memberDao, loanDao, bookService, clock);
 
+        log.info("starting the member gRPC server on {}:{}", MemberGrpcService.HOST, MemberGrpcService.PORT);
+        Server memberServer = NettyServerBuilder
+                .forAddress(new InetSocketAddress(MemberGrpcService.HOST, MemberGrpcService.PORT))
+                .addService(new MemberGrpcService(memberService))
+                .build()
+                .start();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("stopping the gRPC server");
+            stop(memberServer);
+        }));
+
         BookController bookController = new BookController(bookService);
         MemberController memberController = new MemberController(memberService);
         LoanController loanController = new LoanController(loanService);
         ReservationController reservationController = new ReservationController(reservationService);
 
-        Javalin.create(config -> {
+        Javalin app = Javalin.create(config -> {
             config.jsonMapper(new JavalinJackson().updateMapper(mapper ->
                     mapper.registerModule(new JavaTimeModule())
                             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)));
@@ -86,7 +102,26 @@ public final class App {
             memberController.register(config);
             loanController.register(config);
             reservationController.register(config);
-        }).start(7070);
+        });
+        log.info("starting the web server on port 7070");
+        app.start(7070);
         log.info("Library application started on port 7070");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("stopping the web server");
+            app.stop();
+        }));
+    }
+
+    /** Stops a gRPC server, allowing in-flight calls to finish. */
+    private static void stop(Server server) {
+        server.shutdown();
+        try {
+            if (!server.awaitTermination(5, TimeUnit.SECONDS)) {
+                server.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            server.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 }
