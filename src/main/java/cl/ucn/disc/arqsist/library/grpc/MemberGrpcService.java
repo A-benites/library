@@ -70,6 +70,20 @@ public final class MemberGrpcService extends MemberServiceGrpc.MemberServiceImpl
         }
     }
 
+    /** Searches members by a name fragment. */
+    @Override
+    public void searchMembers(SearchMembersRequest request, StreamObserver<ListMembersReply> observer) {
+        try {
+            List<MemberMessage> members = memberService.search(request.getQuery()).stream()
+                    .map(MemberGrpcService::toMessage)
+                    .toList();
+            observer.onNext(ListMembersReply.newBuilder().addAllMembers(members).build());
+            observer.onCompleted();
+        } catch (RuntimeException e) {
+            observer.onError(toError(e));
+        }
+    }
+
     /** Maps a domain exception to its gRPC status. */
     private static StatusRuntimeException toError(RuntimeException e) {
         Status status = Status.INTERNAL;
