@@ -46,4 +46,19 @@ public final class MemberService {
     public List<Member> findAll() {
         return memberDao.findAll();
     }
+
+    /**
+     * Finds a member by ID.
+     *
+     * @param id the member ID
+     * @return the member
+     * @throws NotFoundException if no member has the given ID
+     */
+    public Member findById(int id) {
+        Member member = memberDao.findById(id);
+        if (member == null) {
+            throw new NotFoundException("Member not found: " + id);
+        }
+        return member;
+    }
 }
