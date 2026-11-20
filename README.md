@@ -197,6 +197,34 @@ curl -X POST "http://localhost:7070/reservations?memberId=1&bookId=1"
 curl -X POST http://localhost:7070/reservations/1/fulfill
 ```
 
+## gRPC API
+
+The member module is also available over gRPC. The server listens on `127.0.0.1:50051` and supports these RPCs:
+
+| RPC | Request | Response | Description |
+|-----|---------|----------|-------------|
+| `RegisterMember` | `RegisterMemberRequest` | `MemberMessage` | Registers a member and returns it with its generated ID. |
+| `ListMembers` | `ListMembersRequest` | `ListMembersReply` | Lists all members. |
+| `GetMember` | `GetMemberRequest` | `MemberMessage` | Returns one member by ID. |
+| `SearchMembers` | `SearchMembersRequest` | `ListMembersReply` | Finds names containing a case-insensitive literal fragment. |
+
+The protocol contract is `src/main/proto/member.proto`. Gradle generates the Java messages and service classes under
+`build/generated`; generated files are disposable and should not be committed.
+
+Start the application in one terminal, then run the command-line client in another:
+
+```bash
+./gradlew run
+./gradlew runClient --args="1 2"
+```
+
+The client first lists all members, then looks up each supplied ID. A missing ID or invalid argument is reported and
+the client exits with status 1. The client applies a five-second deadline to every RPC. To check a missing ID, run
+`./gradlew runClient --args="9999"` while the server is running.
+
+The gRPC server binds only to loopback and uses plaintext transport without authentication or TLS. It is intended for
+local development and lab use.
+
 ## Build & tests
 
 ```bash
