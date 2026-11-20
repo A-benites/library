@@ -52,6 +52,10 @@ application {
     mainClass = 'cl.ucn.disc.arqsist.library.App'
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
 tasks.register('runClient', JavaExec) {
     group = 'application'
     description = 'Run the member gRPC client.'
